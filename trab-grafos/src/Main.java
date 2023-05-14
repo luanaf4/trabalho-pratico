@@ -8,27 +8,69 @@ public class Main {
 
     public static void main(String[] args){
         Scanner input = new Scanner(System.in);
-        int option = 0;
-        int edgeNumber = 10;
-        int vertexNumber = edgeNumber * 2;
-        /*
+
         System.out.println("Qual o número de vertices do grafo que você deseja gerar?");
-        System.out.println("1 - 100 vértices");
-        System.out.println("2 - 1.000 vértices");
-        System.out.println("3 - 10.000 vértices");
-        System.out.println("4 - 100.000 vértices");
-        */
+        System.out.println("100 vértices");
+        System.out.println("1.000 vértices");
+        System.out.println("10.000 vértices");
+        System.out.println("100.000 vértices");
+
+        int edgeNumber = input.nextInt();
+        int vertexNumber = edgeNumber * 2;
+
+        if(edgeNumber < 100 || edgeNumber > 100000){
+            edgeNumber = 1000;
+        }
+
+        //temporizador iniciado
+        long startTime = System.nanoTime();
+
 
         DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g = autoGrafo(vertexNumber,edgeNumber);
 
-        Set<DefaultWeightedEdge> arestas = g.edgeSet();
-        Set<Integer> vertices =  g.vertexSet();
+        System.out.println("Digite a opção baseada no que você deseja fazer: ");
+        System.out.println("1 - Verificar dados do grafo");
+        System.out.println("2 - Fecho transitivo direto");
+        System.out.println("3 - Fecho transitivo indireto");
+        System.out.println("");
 
-        Queue<Integer> fila = new ArrayDeque<>();
-        int t = 0;
+        int opcao = input.nextInt();
 
-        System.out.println(g.vertexSet());
-        System.out.println(g.edgeSet());
+        switch (opcao){
+            case 1:
+                System.out.println("Número vértices: " + g.vertexSet().size());
+                System.out.println("Número vértices: " + g.edgeSet().size());
+                break;
+            case 2:
+                for(int i = 1; i <= edgeNumber;i++){
+                    List<Integer> fechoTransitivoDireto = buscaEmLargura(g,i);
+                    if(fechoTransitivoDireto.isEmpty())
+                        System.out.println("O vertice: [ " + i + " ] não possui fecho transitivo.");
+                    else {
+                        Integer[] caminhos = new Integer[fechoTransitivoDireto.size()];
+                        fechoTransitivoDireto.toArray(caminhos);
+                        System.out.println("Eixo transitivo do vertice: [ " + i + " ] :");
+                        for(int j = 0; j != caminhos.length; j++){
+                            System.out.println(caminhos[j]);
+                        }
+                        System.out.println("------------------------------------------------------------");
+                    }
+                }
+                break;
+            case 3:
+
+            default:
+
+        }
+        // termino cronometro
+        long endTime = System.nanoTime();
+        // diferença entre os valores de tempo
+        long timeElapsed = endTime - startTime;
+        float miliseconds = timeElapsed / 1000000;
+
+        System.out.println("Execution time in nanoseconds: " + timeElapsed);
+        System.out.println("Execution time in milliseconds: " + miliseconds);
+        System.out.println("Execution time in seconds: " + miliseconds / 1000);
     }
 
     public static DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> autoGrafo(int qtdV, int qtdE) {
@@ -88,9 +130,14 @@ public class Main {
 
         }
 
+    public static List<Integer> verBase(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g){
+        List<Integer> base = new LinkedList<>();
 
 
 
+
+        return base;
+    }
 
 
 
