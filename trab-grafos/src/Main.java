@@ -1,15 +1,36 @@
 import org.jgrapht.generate.GnmRandomGraphGenerator;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class Main {
     // Gera um grafo direcionado e com arestas de peso aleatórios
+
+    public static void main(String[] args){
+        Scanner input = new Scanner(System.in);
+        int option = 0;
+        int edgeNumber = 10;
+        int vertexNumber = edgeNumber * 2;
+        /*
+        System.out.println("Qual o número de vertices do grafo que você deseja gerar?");
+        System.out.println("1 - 100 vértices");
+        System.out.println("2 - 1.000 vértices");
+        System.out.println("3 - 10.000 vértices");
+        System.out.println("4 - 100.000 vértices");
+        */
+
+        DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g = autoGrafo(vertexNumber,edgeNumber);
+
+        Set<DefaultWeightedEdge> arestas = g.edgeSet();
+        Set<Integer> vertices =  g.vertexSet();
+
+        Queue<Integer> fila = new ArrayDeque<>();
+        int t = 0;
+
+        System.out.println(g.vertexSet());
+        System.out.println(g.edgeSet());
+    }
+
     public static DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> autoGrafo(int qtdV, int qtdE) {
         // Fornecedor de vértices do grafo
         Supplier<Integer> fornecedorVertices = new Supplier<Integer>() {
@@ -41,21 +62,36 @@ public class Main {
 
         return grafo;
     }
-    public static void main(String[] args){
-        Scanner input = new Scanner(System.in);
-        int option = 0;
-        int edgeNumber = 150;
-        int vertexNumber = edgeNumber * 2;
-        /*
-        System.out.println("Qual o número de vertices do grafo que você deseja gerar?");
-        System.out.println("1 - 100 vértices");
-        System.out.println("2 - 1.000 vértices");
-        System.out.println("3 - 10.000 vértices");
-        System.out.println("4 - 100.000 vértices");
-        */
 
-        DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g = autoGrafo(vertexNumber,edgeNumber);
-        System.out.println(g.vertexSet().size());
-        System.out.println(g.edgeSet().size());
-    }
+    public static List<Integer> buscaEmLargura(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g, Integer v){
+        Set<Integer> visitados = new HashSet<>();
+        Queue<Integer> fila = new LinkedList<>();
+        List<Integer> visitadosNaOrdem = new LinkedList<>();
+
+        visitados.add(v);
+        fila.add(v);
+        visitadosNaOrdem.add(v);
+
+        while (!fila.isEmpty()) {
+            Integer verticeAtual = fila.poll();
+            for (DefaultWeightedEdge aresta : g.outgoingEdgesOf(verticeAtual)) {
+                Integer vizinho = g.getEdgeTarget(aresta);
+                if (!visitados.contains(vizinho)) {
+                    visitados.add(vizinho);
+                    fila.add(vizinho);
+                    visitadosNaOrdem.add(vizinho);
+                }
+            }
+        }
+
+        return visitadosNaOrdem;
+
+        }
+
+
+
+
+
+
+
 }
