@@ -30,10 +30,12 @@ public class Main {
 
         System.out.println("Digite a opção baseada no que você deseja fazer: ");
         System.out.println("1 - Verificar dados do grafo");
-        System.out.println("2 - Fecho transitivo direto");
-        System.out.println("3 - Fecho transitivo inverso");
+        System.out.println("2 - Fecho transitivo direto por naive");
+        System.out.println("3 - Fecho transitivo inverso por naive");
         System.out.println("4 - Base e antibase pelo método de Warshall");
         System.out.println("5 - Base e antibase pelo método de naive");
+        System.out.println("6 - Fecho transitivo direto pelo método de Warshall");
+        System.out.println("7 - Fecho transitivo inverso pelo método de Warshall");
         System.out.println("");
 
         int opcao = input.nextInt();
@@ -54,6 +56,9 @@ public class Main {
                 break;
             case 5:
                 naive(g);
+                break;
+            case 6:
+                fechoTransitivoDiretoWarshall(g);
                 break;
             default:
                 System.out.println("Opção inválida");
@@ -257,7 +262,37 @@ public class Main {
         }
     }
 
+    public static void fechoTransitivoDiretoWarshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
+        int n = g.vertexSet().size();
+        boolean[][] alcancabilidade = new boolean[n][n];
 
+        // Inicializa a matriz de alcançabilidade com base nas arestas existentes no grafo
+        for (DefaultWeightedEdge edge : g.edgeSet()) {
+            int origem = g.getEdgeSource(edge) - 1;
+            int destino = g.getEdgeTarget(edge) - 1;
+            alcancabilidade[origem][destino] = true;
+        }
+
+        // Algoritmo de Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    alcancabilidade[i][j] = alcancabilidade[i][j] || (alcancabilidade[i][k] && alcancabilidade[k][j]);
+                }
+            }
+        }
+
+        // Imprime o fecho transitivo direto de cada vértice
+        for (int i = 0; i < n; i++) {
+            System.out.println("Fecho transitivo direto do vértice " + (i + 1) + ":");
+            for (int j = 0; j < n; j++) {
+                if (alcancabilidade[i][j]) {
+                    System.out.print((j + 1) + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
 
 
 
