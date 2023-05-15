@@ -60,6 +60,9 @@ public class Main {
             case 6:
                 fechoTransitivoDiretoWarshall(g);
                 break;
+            case 7:
+                fechoTransitivoInversoWarshall(g);
+                break;
             default:
                 System.out.println("Opção inválida");
         }
@@ -294,6 +297,37 @@ public class Main {
         }
     }
 
+    public static void fechoTransitivoInversoWarshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
+        int n = g.vertexSet().size();
+        boolean[][] alcancabilidade = new boolean[n][n];
+
+        // Inicializa a matriz de alcançabilidade com base nas arestas existentes no grafo
+        for (DefaultWeightedEdge edge : g.edgeSet()) {
+            int origem = g.getEdgeSource(edge) - 1;
+            int destino = g.getEdgeTarget(edge) - 1;
+            alcancabilidade[destino][origem] = true; // Inverte a direção das arestas
+        }
+
+        // Algoritmo de Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    alcancabilidade[i][j] = alcancabilidade[i][j] || (alcancabilidade[i][k] && alcancabilidade[k][j]);
+                }
+            }
+        }
+
+        // Imprime o fecho transitivo inverso de cada vértice
+        for (int i = 0; i < n; i++) {
+            System.out.println("Fecho transitivo inverso do vértice " + (i + 1) + ":");
+            for (int j = 0; j < n; j++) {
+                if (alcancabilidade[i][j]) {
+                    System.out.print((j + 1) + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
 
 
 
