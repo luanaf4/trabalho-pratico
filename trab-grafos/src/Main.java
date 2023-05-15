@@ -216,7 +216,8 @@ public class Main {
         return false;
     }
 
-    //base e antibase pelo método naive utilizando método isReachable como auxilio
+
+    // Base e antibase pelo método naive utilizando o método isReachable como auxílio
     public static void naive(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
         int n = g.vertexSet().size();
         List<Integer> base = new ArrayList<>();
@@ -226,7 +227,7 @@ public class Main {
             boolean isInBase = true;
             for (int otherVertex = 1; otherVertex <= n; otherVertex++) {
                 if (vertex != otherVertex) {
-                    if (!isReachable(g, vertex, otherVertex) || isReachable(g, otherVertex, vertex)) {
+                    if (isReachable(g, otherVertex, vertex)) {
                         isInBase = false;
                         break;
                     }
@@ -239,7 +240,7 @@ public class Main {
             }
         }
 
-        //Imprime a base e antibase
+        // Imprime a base e antibase no console
         System.out.println("Base:");
         for (Integer vertex : base) {
             System.out.println(vertex);
@@ -249,6 +250,8 @@ public class Main {
             System.out.println(vertex);
         }
     }
+
+
 
 
 
