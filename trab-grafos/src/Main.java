@@ -41,7 +41,7 @@ public class Main {
         switch (opcao){
             case 1:
                 System.out.println("Número vértices: " + g.vertexSet().size());
-                System.out.println("Número edge: " + g.edgeSet().size());
+                System.out.println("Número aresta: " + g.edgeSet().size());
                 break;
             case 2:
                 fechoTransitivo(g);
