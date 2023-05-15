@@ -32,13 +32,14 @@ public class Main {
         System.out.println("1 - Verificar dados do grafo");
         System.out.println("2 - Fecho transitivo direto");
         System.out.println("3 - Fecho transitivo indireto");
+        System.out.println("4 - Base e antibase pelo método de Warshall");
         System.out.println("");
 
         int opcao = input.nextInt();
 
         switch (opcao){
             case 1:
-                System.out.println("Número vértices: " + g.vertexSet().size());
+                System.out.println("Número arestas: " + g.vertexSet().size());
                 System.out.println("Número vértices: " + g.edgeSet().size());
                 break;
             case 2:
@@ -58,9 +59,13 @@ public class Main {
                 }
                 break;
             case 3:
-
+                //implementar fecho transitivo indireto
+                break;
+            case 4:
+                warshall(g);
+                break;
             default:
-
+                System.out.println("Opção inválida");
         }
         // termino cronometro
         long endTime = System.nanoTime();
@@ -130,14 +135,57 @@ public class Main {
 
         }
 
-    public static List<Integer> verBase(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g){
-        List<Integer> base = new LinkedList<>();
+    public static void warshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
+        int n = g.vertexSet().size();
+        boolean[][] alcancabilidade = new boolean[n][n];
 
+        //Inicializa a matriz de alcançabilidade com base nas arestas existentes no grafo
+        for (DefaultWeightedEdge edge : g.edgeSet()) {
+            int origem = g.getEdgeSource(edge) - 1;
+            int destino = g.getEdgeTarget(edge) - 1;
+            alcancabilidade[origem][destino] = true;
+        }
 
+        //Algoritmo de Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    alcancabilidade[i][j] = alcancabilidade[i][j] || (alcancabilidade[i][k] && alcancabilidade[k][j]);
+                }
+            }
+        }
 
+        //Listas para definir base e antibase
+        List<Integer> base = new ArrayList<>();
+        List<Integer> antibase = new ArrayList<>();
 
-        return base;
+        //Vértices que pertencem à base e antibase
+        for (int i = 0; i < n; i++) {
+            boolean inBase = true;
+            for (int j = 0; j < n; j++) {
+                if (i != j && alcancabilidade[i][j]) {
+                    inBase = false;
+                    break;
+                }
+            }
+            if (inBase) {
+                base.add(i + 1);
+            } else {
+                antibase.add(i + 1);
+            }
+        }
+
+        //Imprime a base e antibase
+        System.out.println("Base:");
+        for (Integer vertex : base) {
+            System.out.println(vertex);
+        }
+        System.out.println("Antibase:");
+        for (Integer vertex : antibase) {
+            System.out.println(vertex);
+        }
     }
+
 
 
 
