@@ -2,7 +2,7 @@ import org.jgrapht.generate.GnmRandomGraphGenerator;
 import org.jgrapht.graph.*;
 import java.util.*;
 import java.util.function.Supplier;
-
+//
 public class Main {
     // Gera um grafo direcionado e com arestas de peso aleatórios
 
