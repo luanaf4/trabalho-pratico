@@ -30,12 +30,10 @@ public class Main {
 
         System.out.println("Digite a opção baseada no que você deseja fazer: ");
         System.out.println("1 - Verificar dados do grafo");
-        System.out.println("2 - Fecho transitivo direto por naive");
-        System.out.println("3 - Fecho transitivo inverso por naive");
+        System.out.println("2 - Fecho transitivo direto");
+        System.out.println("3 - Fecho transitivo inverso");
         System.out.println("4 - Base e antibase pelo método de Warshall");
         System.out.println("5 - Base e antibase pelo método de naive");
-        System.out.println("6 - Fecho transitivo direto pelo método de Warshall");
-        System.out.println("7 - Fecho transitivo inverso pelo método de Warshall");
         System.out.println("");
 
         int opcao = input.nextInt();
@@ -49,18 +47,20 @@ public class Main {
                 fechoTransitivo(g);
                 break;
             case 3:
+                System.out.println("Fecho transitivo indireto: ");
+                DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> gCopia = fechoTransitivoIndireto(g);
+                for(Integer vertice : gCopia.vertexSet()){
+                    System.out.println("Vertice: " + vertice);
+                    for(DefaultWeightedEdge aresta : gCopia.outgoingEdgesOf(vertice)){
+                        System.out.println("   Aresta " + aresta + " para o vértice " + gCopia.getEdgeTarget(aresta));
+                    }
+                }
                 break;
             case 4:
                 warshall(g);
                 break;
             case 5:
                 naive(g);
-                break;
-            case 6:
-                fechoTransitivoDiretoWarshall(g);
-                break;
-            case 7:
-                fechoTransitivoInversoWarshall(g);
                 break;
             default:
                 System.out.println("Opção inválida");
@@ -260,69 +260,21 @@ public class Main {
         }
     }
 
-    public static void fechoTransitivoDiretoWarshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
-        int n = g.vertexSet().size();
-        boolean[][] alcancabilidade = new boolean[n][n];
+    public static DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> fechoTransitivoIndireto(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g){
+        DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> gCopia = new DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+        for(Integer vertice : g.vertexSet()){
+            List<Integer> ftd = buscaEmLargura(g, vertice);
+            for(Integer vertice2 : ftd){
+                gCopia.addVertex(vertice2);
 
-        // Inicializa a matriz de alcançabilidade com base nas arestas existentes no grafo
-        for (DefaultWeightedEdge edge : g.edgeSet()) {
-            int origem = g.getEdgeSource(edge) - 1;
-            int destino = g.getEdgeTarget(edge) - 1;
-            alcancabilidade[origem][destino] = true;
-        }
-
-        // Algoritmo de Warshall
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    alcancabilidade[i][j] = alcancabilidade[i][j] || (alcancabilidade[i][k] && alcancabilidade[k][j]);
-                }
+            if(vertice2 != vertice){
+                gCopia.addEdge(vertice,vertice2);
+            }
             }
         }
-
-        // Imprime o fecho transitivo direto de cada vértice
-        for (int i = 0; i < n; i++) {
-            System.out.println("Fecho transitivo direto do vértice " + (i + 1) + ":");
-            for (int j = 0; j < n; j++) {
-                if (alcancabilidade[i][j]) {
-                    System.out.print((j + 1) + " ");
-                }
-            }
-            System.out.println();
-        }
+        return gCopia;
     }
 
-    public static void fechoTransitivoInversoWarshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
-        int n = g.vertexSet().size();
-        boolean[][] alcancabilidade = new boolean[n][n];
-
-        // Inicializa a matriz de alcançabilidade com base nas arestas existentes no grafo
-        for (DefaultWeightedEdge edge : g.edgeSet()) {
-            int origem = g.getEdgeSource(edge) - 1;
-            int destino = g.getEdgeTarget(edge) - 1;
-            alcancabilidade[destino][origem] = true; // Inverte a direção das arestas
-        }
-
-        // Algoritmo de Warshall
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    alcancabilidade[i][j] = alcancabilidade[i][j] || (alcancabilidade[i][k] && alcancabilidade[k][j]);
-                }
-            }
-        }
-
-        // Imprime o fecho transitivo inverso de cada vértice
-        for (int i = 0; i < n; i++) {
-            System.out.println("Fecho transitivo inverso do vértice " + (i + 1) + ":");
-            for (int j = 0; j < n; j++) {
-                if (alcancabilidade[i][j]) {
-                    System.out.print((j + 1) + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
 
 
 }
