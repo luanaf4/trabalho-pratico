@@ -44,20 +44,7 @@ public class Main {
                 System.out.println("Número vértices: " + g.edgeSet().size());
                 break;
             case 2:
-                for(int i = 1; i <= edgeNumber;i++){
-                    List<Integer> fechoTransitivoDireto = buscaEmLargura(g,i);
-                    if(fechoTransitivoDireto.isEmpty())
-                        System.out.println("O vertice: [ " + i + " ] não possui fecho transitivo.");
-                    else {
-                        Integer[] caminhos = new Integer[fechoTransitivoDireto.size()];
-                        fechoTransitivoDireto.toArray(caminhos);
-                        System.out.println("Eixo transitivo do vertice: [ " + i + " ] :");
-                        for(int j = 0; j != caminhos.length; j++){
-                            System.out.println(caminhos[j]);
-                        }
-                        System.out.println("------------------------------------------------------------");
-                    }
-                }
+                fechoTransitivo(g);
                 break;
             case 3:
                 //implementar fecho transitivo inverso
@@ -112,6 +99,25 @@ public class Main {
         }
 
         return grafo;
+    }
+
+    public static void fechoTransitivo(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g){
+        int numVertice = g.edgeSet().size();
+        int numArestas = g.vertexSet().size();
+        for(int i = 1; i <= numVertice;i++){
+            List<Integer> fechoTransitivoDireto = buscaEmLargura(g,i);
+            if(fechoTransitivoDireto.isEmpty())
+                System.out.println("O vertice: [ " + i + " ] não possui fecho transitivo.");
+            else {
+                Integer[] caminhos = new Integer[fechoTransitivoDireto.size()];
+                fechoTransitivoDireto.toArray(caminhos);
+                System.out.println("Eixo transitivo do vertice: [ " + i + " ] :");
+                for(int j = 0; j != caminhos.length; j++){
+                    System.out.println(caminhos[j]);
+                }
+                System.out.println("------------------------------------------------------------");
+            }
+        }
     }
 
     public static List<Integer> buscaEmLargura(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g, Integer v){
