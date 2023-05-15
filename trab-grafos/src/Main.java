@@ -15,11 +15,11 @@ public class Main {
         System.out.println("10.000 vértices");
         System.out.println("100.000 vértices");
 
-        int edgeNumber = input.nextInt();
-        int vertexNumber = edgeNumber * 2;
+        int vertexNumber = input.nextInt();
+        int edgeNumber = vertexNumber * 2;
 
-        if(edgeNumber < 100 || edgeNumber > 100000){
-            edgeNumber = 1000;
+        if(vertexNumber < 100 || vertexNumber > 100000){
+            vertexNumber = 1000;
         }
 
         //temporizador iniciado
@@ -40,14 +40,13 @@ public class Main {
 
         switch (opcao){
             case 1:
-                System.out.println("Número arestas: " + g.vertexSet().size());
-                System.out.println("Número vértices: " + g.edgeSet().size());
+                System.out.println("Número vértices: " + g.vertexSet().size());
+                System.out.println("Número edge: " + g.edgeSet().size());
                 break;
             case 2:
                 fechoTransitivo(g);
                 break;
             case 3:
-                //implementar fecho transitivo inverso
                 break;
             case 4:
                 warshall(g);
@@ -102,8 +101,8 @@ public class Main {
     }
 
     public static void fechoTransitivo(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g){
-        int numVertice = g.edgeSet().size();
-        int numArestas = g.vertexSet().size();
+        int numArestas = g.edgeSet().size();
+        int numVertice = g.vertexSet().size();
         for(int i = 1; i <= numVertice;i++){
             List<Integer> fechoTransitivoDireto = buscaEmLargura(g,i);
             if(fechoTransitivoDireto.isEmpty())
@@ -143,7 +142,7 @@ public class Main {
 
         return visitadosNaOrdem;
 
-        }
+    }
 
     public static void warshall(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
         int n = g.vertexSet().size();
@@ -195,8 +194,6 @@ public class Main {
             System.out.println(vertex);
         }
     }
-
-
     //método que realiza uma busca em largura para saber se um vértice é alcançavel por meio de outro vértice
     private static boolean isReachable(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g, int source, int target) {
         Set<Integer> visited = new HashSet<>();
@@ -221,8 +218,6 @@ public class Main {
 
         return false;
     }
-
-
     // Base e antibase pelo método naive utilizando o método isReachable como auxílio
     public static void naive(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
         int n = g.vertexSet().size();
@@ -256,7 +251,6 @@ public class Main {
             System.out.println(vertex);
         }
     }
-
 
 
 
