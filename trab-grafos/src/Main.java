@@ -31,8 +31,9 @@ public class Main {
         System.out.println("Digite a opção baseada no que você deseja fazer: ");
         System.out.println("1 - Verificar dados do grafo");
         System.out.println("2 - Fecho transitivo direto");
-        System.out.println("3 - Fecho transitivo indireto");
+        System.out.println("3 - Fecho transitivo inverso");
         System.out.println("4 - Base e antibase pelo método de Warshall");
+        System.out.println("5 - Base e antibase pelo método de naive");
         System.out.println("");
 
         int opcao = input.nextInt();
@@ -59,10 +60,13 @@ public class Main {
                 }
                 break;
             case 3:
-                //implementar fecho transitivo indireto
+                //implementar fecho transitivo inverso
                 break;
             case 4:
                 warshall(g);
+                break;
+            case 5:
+                naive(g);
                 break;
             default:
                 System.out.println("Opção inválida");
@@ -172,6 +176,66 @@ public class Main {
                 base.add(i + 1);
             } else {
                 antibase.add(i + 1);
+            }
+        }
+
+        //Imprime a base e antibase
+        System.out.println("Base:");
+        for (Integer vertex : base) {
+            System.out.println(vertex);
+        }
+        System.out.println("Antibase:");
+        for (Integer vertex : antibase) {
+            System.out.println(vertex);
+        }
+    }
+
+
+    //método que realiza uma busca em largura para saber se um vértice é alcançavel por meio de outro vértice
+    private static boolean isReachable(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g, int source, int target) {
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited.add(source);
+        queue.add(source);
+
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            if (vertex == target) {
+                return true;
+            }
+            for (DefaultWeightedEdge edge : g.outgoingEdgesOf(vertex)) {
+                int neighbor = g.getEdgeTarget(edge);
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //base e antibase pelo método naive utilizando método isReachable como auxilio
+    public static void naive(DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> g) {
+        int n = g.vertexSet().size();
+        List<Integer> base = new ArrayList<>();
+        List<Integer> antibase = new ArrayList<>();
+
+        for (int vertex = 1; vertex <= n; vertex++) {
+            boolean isInBase = true;
+            for (int otherVertex = 1; otherVertex <= n; otherVertex++) {
+                if (vertex != otherVertex) {
+                    if (!isReachable(g, vertex, otherVertex) || isReachable(g, otherVertex, vertex)) {
+                        isInBase = false;
+                        break;
+                    }
+                }
+            }
+            if (isInBase) {
+                base.add(vertex);
+            } else {
+                antibase.add(vertex);
             }
         }
 
